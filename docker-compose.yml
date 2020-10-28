@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+    mysql:
+        image: mysql:8
+        container_name: craft-demo-mysql
+        networks:
+            - craft-demo-network
+        ports:
+            - "3306:3306"
+        volumes:
+            - craft-demo-mysql-data:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: password
+            MYSQL_USER: craft
+            MYSQL_PASSWORD: password
+            MYSQL_DATABASE: craft_demo
+
+    web:
+        build:
+            context: .
+            dockerfile: Dockerfile
+            args:
+                USER: kevin
+                UID: 1000
+                GID: 1000
+        container_name: craft-demo-web
+        networks:
+            - craft-demo-network
+        ports:
+            - "80:80"
+        volumes:
+            - .:/var/www
+
+volumes:
+    craft-demo-mysql-data:
+
+networks:
+    craft-demo-network:
